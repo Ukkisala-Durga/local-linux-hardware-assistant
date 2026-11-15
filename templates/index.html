@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Linux Laptop Hardware Q&A Assistant</title>
+  <link rel="stylesheet" href="/static/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Sidebar / System Telemetry Drawer -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="brand">
+          <div class="brand-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+              <line x1="8" y1="21" x2="16" y2="21"></line>
+              <line x1="12" y1="17" x2="12" y2="21"></line>
+            </svg>
+          </div>
+          <div>
+            <h1 class="brand-title">Linux Hardware Q&A</h1>
+            <span class="brand-subtitle">Host Telemetry Engine</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Telemetry Cards -->
+      <div class="telemetry-section">
+        <div class="section-label">
+          <span>HARDWARE OVERVIEW</span>
+          <button id="refresh-hw-btn" class="icon-btn-tiny" title="Refresh Telemetry">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M23 4v6h-6"></path>
+              <path d="M1 20v-6h6"></path>
+              <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+            </svg>
+          </button>
+        </div>
+
+        <div class="hw-cards-grid">
+          <!-- CPU Card -->
+          <div class="hw-card" data-category="cpu" onclick="askPreset('Tell me about my processor.')">
+            <div class="hw-card-icon cpu-color">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="4" y="4" width="16" height="16" rx="2"></rect>
+                <rect x="9" y="9" width="6" height="6"></rect>
+                <path d="M9 1v3M15 1v3M9 20v3M15 20v3M20 9h3M20 14h3M1 9h3M1 14h3"></path>
+              </svg>
+            </div>
+            <div class="hw-card-body">
+              <div class="hw-card-label">CPU</div>
+              <div class="hw-card-val" id="card-cpu-val">Detecting...</div>
+              <div class="hw-card-sub" id="card-cpu-sub">Physical Cores / Threads</div>
+            </div>
+          </div>
+
+          <!-- Memory Card -->
+          <div class="hw-card" data-category="memory" onclick="askPreset('How much RAM do I have?')">
+            <div class="hw-card-icon mem-color">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M6 19v-3M10 19v-3M14 19v-3M18 19v-3M6 8V5M10 8V5M14 8V5M18 8V5"></path>
+                <rect x="2" y="8" width="20" height="8" rx="1"></rect>
+              </svg>
+            </div>
+            <div class="hw-card-body">
+              <div class="hw-card-label">RAM Memory</div>
+              <div class="hw-card-val" id="card-mem-val">Detecting...</div>
+              <div class="hw-card-sub" id="card-mem-sub">Total / Available</div>
+            </div>
+          </div>
+
+          <!-- Storage Card -->
+          <div class="hw-card" data-category="storage" onclick="askPreset('Is my SSD NVMe or SATA?')">
+            <div class="hw-card-icon disk-color">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="22" y1="12" x2="2" y2="12"></line>
+                <path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path>
+                <line x1="6" y1="16" x2="6.01" y2="16"></line>
+                <line x1="10" y1="16" x2="10.01" y2="16"></line>
+              </svg>
+            </div>
+            <div class="hw-card-body">
+              <div class="hw-card-label">Storage</div>
+              <div class="hw-card-val" id="card-storage-val">Detecting...</div>
+              <div class="hw-card-sub" id="card-storage-sub">Capacity & Type</div>
+            </div>
+          </div>
+
+          <!-- GPU Card -->
+          <div class="hw-card" data-category="gpu" onclick="askPreset('What GPU does my laptop have?')">
+            <div class="hw-card-icon gpu-color">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+              </svg>
+            </div>
+            <div class="hw-card-body">
+              <div class="hw-card-label">Graphics (GPU)</div>
+              <div class="hw-card-val" id="card-gpu-val">Detecting...</div>
+              <div class="hw-card-sub" id="card-gpu-sub">Display Controller</div>
+            </div>
+          </div>
+
+          <!-- OS Card -->
+          <div class="hw-card" data-category="os" onclick="askPreset('What Linux operating system am I running?')">
+            <div class="hw-card-icon os-color">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polygon points="12 8 8 12 12 16 16 12 12 8"></polygon>
+              </svg>
+            </div>
+            <div class="hw-card-body">
+              <div class="hw-card-label">Operating System</div>
+              <div class="hw-card-val" id="card-os-val">Detecting...</div>
+              <div class="hw-card-sub" id="card-os-sub">Kernel & Distro</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- System & AI Engine Status -->
+      <div class="status-panel">
+        <div class="status-item">
+          <span class="status-indicator" id="platform-indicator"></span>
+          <span class="status-text" id="platform-status">System: Detecting...</span>
+        </div>
+        <div class="status-item">
+          <span class="status-indicator" id="ai-indicator"></span>
+          <span class="status-text" id="ai-status">AI: Rule-based fallback</span>
+        </div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="sidebar-footer">
+        <button class="footer-btn" onclick="askPreset('Can I upgrade my RAM?')">
+          <span>Check RAM Upgrade</span>
+        </button>
+        <button class="footer-btn" onclick="askPreset('Show my complete hardware details.')">
+          <span>Full Specs Summary</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Chat Workspace -->
+    <main class="chat-main">
+      <!-- Top Navbar -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="menu-toggle" id="sidebar-toggle" title="Toggle Sidebar">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+          </button>
+          <div class="header-status-pill" id="security-pill">
+            <span class="security-dot"></span>
+            <span>Safe Subprocess Execution &bull; Read-Only</span>
+          </div>
+        </div>
+
+        <div class="topbar-actions">
+          <button class="icon-btn" id="theme-toggle" title="Toggle Dark/Light Mode">
+            <svg id="theme-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+          </button>
+          <button class="icon-btn" id="clear-chat-btn" title="Clear Conversation">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="3 6 5 6 21 6"></polyline>
+              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+            </svg>
+          </button>
+        </div>
+      </header>
+
+      <!-- Chat History Container -->
+      <section class="messages-container" id="messages-container">
+        <!-- Welcome Message -->
+        <div class="message assistant-message">
+          <div class="message-avatar">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+            </svg>
+          </div>
+          <div class="message-content">
+            <div class="message-bubble">
+              <p>Hello! I am your <strong>Linux Laptop Hardware Assistant</strong>.</p>
+              <p>I inspect your machine's real hardware using safe, read-only system tools (<code>lscpu</code>, <code>lsblk</code>, <code>free</code>, <code>lspci</code>, <code>dmidecode</code>, and <code>/proc</code>) and answer your questions in plain English without guessing or hallucinating.</p>
+            </div>
+            <div class="message-meta">
+              <span class="meta-tag">System Ready</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Suggested Question Chips -->
+      <div class="suggestions-wrapper" id="suggestions-wrapper">
+        <div class="suggestions-title">SUGGESTED QUESTIONS:</div>
+        <div class="suggestion-chips" id="suggestion-chips">
+          <button class="chip" onclick="askPreset('How much RAM do I have?')">How much RAM do I have?</button>
+          <button class="chip" onclick="askPreset('Tell me about my CPU.')">Tell me about my CPU</button>
+          <button class="chip" onclick="askPreset('Is my SSD NVMe or SATA?')">Is my SSD NVMe or SATA?</button>
+          <button class="chip" onclick="askPreset('Can I upgrade my RAM?')">Can I upgrade my RAM?</button>
+          <button class="chip" onclick="askPreset('What GPU does my laptop have?')">What GPU do I have?</button>
+          <button class="chip" onclick="askPreset('Show my complete hardware details.')">Show complete specs</button>
+        </div>
+      </div>
+
+      <!-- Chat Input Dock -->
+      <footer class="input-dock">
+        <form class="input-form" id="chat-form">
+          <textarea
+            id="chat-input"
+            rows="1"
+            placeholder="Ask about your laptop's hardware (e.g. 'How much RAM is currently available?')..."
+            autocomplete="off"
+            required
+          ></textarea>
+          <button type="submit" class="send-btn" id="send-btn" title="Send Question (Enter)">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="22" y1="2" x2="11" y2="13"></line>
+              <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+            </svg>
+          </button>
+        </form>
+        <div class="dock-footnote">
+          <span>Safe read-only execution &bull; Local data never leaves laptop</span>
+        </div>
+      </footer>
+    </main>
+  </div>
+
+  <script src="/static/script.js"></script>
+</body>
+</html>
